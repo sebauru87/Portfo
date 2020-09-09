@@ -49,7 +49,7 @@ def send_whatsapp(email, message):
 
     message = client.messages.create(
         from_='whatsapp:+14155238886',
-        body=f'{email} sent you: {message}',
+        body='Your appointment is coming up on July 21 at 3PM',
         to='whatsapp:+59898394287'
     )
 
