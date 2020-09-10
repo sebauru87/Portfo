@@ -3,6 +3,8 @@ import csv
 from twilio.rest import Client
 import os
 from dotenv import load_dotenv
+from myemail import send_email
+
 load_dotenv(override=True)
 
 app = Flask(__name__)
@@ -11,19 +13,6 @@ app = Flask(__name__)
 @app.route('/')
 def my_home():
     return render_template('index.html')
-
-
-# @app.route('/index.html')
-# def my_home_index():
-#     return render_template('index.html')
-#
-# @app.route('/works.html')
-# def my_works():
-#     return render_template('works.html')
-#
-# @app.route('/about.html')
-# def my_about():
-#     return render_template('about.html')
 
 
 @app.route('/<string:page_name>')
@@ -39,9 +28,7 @@ def write_data_to_file(data):
         file = database.write(f'\n{email}, {subject}, {message}')
 
 
-
-
-def send_whatsapp(email, message):
+def send_whatsapp():
     account_sid = 'ACa1a497c8a2b31b3322a0f61422f8e6b0'
     SECRET_KEY = os.getenv("SECRET_KEY")
     auth_token = SECRET_KEY
@@ -55,13 +42,13 @@ def send_whatsapp(email, message):
 
 
 def write_data_to_csv(data):
-    with open('database.csv', newline='', mode='a') as database2:
+    with open('./database.csv', newline='', mode='a') as database2:
         email = data['email']
         subject = data['subject']
         message = data['message']
         csv_writer = csv.writer(database2, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         csv_writer.writerow([email, subject, message])
-        send_whatsapp(email, message)
+        send_email(email, subject, message)
 
 
 @app.route('/submit_form', methods=['POST', 'GET'])
